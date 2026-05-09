@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+
+# Ignore environment variable files
+.env
+.env.local
+.env.development
+
+# Ignore log files
+logs/
