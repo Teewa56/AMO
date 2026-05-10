@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOM Secure | Financial Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); transition: all 0.3s ease; }
+        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px #0ea5e9; }
+        input::placeholder { color: #475569; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const App = () => {
+            const API_BASE = "http://127.0.0.1:8000/api/v1/transactions";
+            
+            // --- LOGIC: WALLET STATE ---
+            // We use this to keep track of the user once they "Sync"
+            const [wallet, setWallet] = useState({ 
+                account_number: null, 
+                balance: 0, 
+                bank_name: "" 
+            });
+
+            // --- LOGIC: FORM STATES ---
+            const [initForm, setInitForm] = useState({ full_name: "", email: "" });
+            
+            const [sendForm, setSendForm] = useState({ 
+                amount: "", 
+                nip_code: "000013", // Default to GTB NIP Code
+                account_number: "", // This is the RECIPIENT
+                account_name: "",   // This matches our updated backend schema
+                remark: "AOM Secure Payout" 
+            });
+
+            const [status, setStatus] = useState({ msg: "Infrastructure Ready", type: "info" });
+            const [metrics, setMetrics] = useState(null);
+            const [loading, setLoading] = useState(false);
+
+            // --- 1. INITIALIZE ACCOUNT (RECEIVE MONEY LOGIC) ---
+            const handleInitialize = async () => {
+                setLoading(true);
+                try {
+                    const res = await fetch(`${API_BASE}/receive`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(initForm)
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        // We store the data so we can use wallet.account_number later
+                        setWallet({ 
+                            account_number: data.account_number, 
+                            balance: data.starting_balance || data.balance,
+                            bank_name: data.bank_name
+                        });
+                        setStatus({ msg: "Wallet Synced Successfully", type: "success" });
+                    } else {
+                        setStatus({ msg: data.detail || "Init Failed", type: "error" });
+                    }
+                } catch (err) {
+                    setStatus({ msg: "Backend Offline", type: "error" });
+                }
+                setLoading(false);
+            };
+
+            // --- 2. AUTHORIZE TRANSACTION (SEND MONEY LOGIC) ---
+            const handleSendMoney = async () => {
+                // Front-end validation to prevent empty API calls
+                if (!sendForm.account_name || !sendForm.account_number || !sendForm.amount) {
+                    setStatus({ msg: "Missing required fields", type: "error" });
+                    return;
+                }
+
+                if (!wallet.account_number) {
+                    setStatus({ msg: "Initialize your wallet first", type: "error" });
+                    return;
+                }
+
+                setLoading(true);
+                try {
+                    const res = await fetch(`${API_BASE}/send`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            ...sendForm,
+                            amount: parseFloat(sendForm.amount), // Fix for the 422 error
+                            sender_account: wallet.account_number // Fix for the Identity Swap
+                        })
+                    });
+                    const data = await res.json();
+                    
+                    if (res.ok) {
+                        // FIX: We use 'prev' to keep the account number intact and stop the 'logout'
+                        setWallet(prev => ({ 
+                            ...prev, 
+                            balance: data.new_balance 
+                        }));
+                        setMetrics(data.metrics);
+                        setStatus({ msg: `Success! Ref: ${data.reference}`, type: "success" });
+                    } else {
+                        setStatus({ msg: data.detail || "Transaction Rejected", type: "error" });
+                    }
+                } catch (err) {
+                    setStatus({ msg: "API Connection Dropped", type: "error" });
+                }
+                setLoading(false);
+            };
+
+            // Initialize Lucide Icons after render
+            useEffect(() => { lucide.createIcons(); }, [wallet, metrics, status]);
+
+            return (
+                <div className="min-h-screen p-4 md:p-8 max-w-6xl mx-auto">
+                    {/* TOP NAVIGATION BAR */}
+                    <div className="flex justify-between items-center mb-12">
+                        <div>
+                            <h1 className="text-4xl font-black tracking-tighter text-white flex items-center gap-3">
+                                <div className="w-10 h-10 bg-sky-500 rounded-xl flex items-center justify-center shadow-lg shadow-sky-500/20">
+                                    <i data-lucide="shield-check" className="w-6 h-6 text-white"></i>
+                                </div>
+                                AOM <span className="text-sky-500">SECURE</span>
+                            </h1>
+                            <div className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-2 ml-1">EEE-Infrastructure v1.0</div>
+                        </div>
+                        
+                        <div className={`px-6 py-2 rounded-full text-xs font-black border transition-all duration-500 ${
+                            status.type === 'error' ? 'border-red-500/30 bg-red-500/5 text-red-400' : 
+                            status.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-400' : 
+                            'border-slate-700 bg-slate-800/50 text-slate-400'
+                        }`}>
+                            {status.msg.toUpperCase()}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        {/* WALLET & INITIALIZATION PANEL */}
+                        <div className="lg:col-span-1 space-y-6">
+                            <div className="glass p-8 rounded-[2rem] border-white/5 relative overflow-hidden group">
+                                <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                                    <i data-lucide="wallet" className="w-32 h-32"></i>
+                                </div>
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-6 tracking-widest">Digital Vault</h3>
+                                <div className="text-5xl font-black mb-4 tracking-tighter">₦{wallet.balance.toLocaleString()}</div>
+                                <div className="space-y-1">
+                                    <div className="text-sky-400 font-mono text-sm tracking-widest uppercase">
+                                        {wallet.account_number || "AWAITING SYNC..."}
+                                    </div>
+                                    <div className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                                        {wallet.bank_name || "OFFLINE"}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="glass p-8 rounded-[2rem] border-white/5">
+                                <h3 className="text-slate-500 text-[10px] font-black uppercase mb-6 tracking-widest">Initialize Node</h3>
+                                <div className="space-y-4">
+                                    <input className="w-full bg-slate-900/80 border border-white/5 p-4 rounded-xl text-sm focus:border-sky-500 focus:outline-none transition-colors" 
+                                           placeholder="Full Legal Name" onChange={e => setInitForm({...initForm, full_name: e.target.value})} />
+                                    <input className="w-full bg-slate-900/80 border border-white/5 p-4 rounded-xl text-sm focus:border-sky-500 focus:outline-none transition-colors" 
+                                           placeholder="Email Address" onChange={e => setInitForm({...initForm, email: e.target.value})} />
+                                    <button onClick={handleInitialize} disabled={loading} className="w-full btn-gradient py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em]">
+                                        {loading ? "Establishing Link..." : "Sync to Network"}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* TRANSACTION INFRASTRUCTURE */}
+                        <div className="lg:col-span-2 space-y-8">
+                            <div className="glass p-10 rounded-[2.5rem] border-white/5">
+                                <div className="flex justify-between items-center mb-10">
+                                    <h2 className="text-2xl font-black tracking-tight">Autonomous Payout</h2>
+                                    <div className="flex items-center gap-2 bg-emerald-500/10 text-emerald-500 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                        AI Engine Secure
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                    <div className="space-y-6">
+                                        <div className="group">
+                                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-widest ml-1 mb-2 block">Recipient Account</label>
+                                            <input className="w-full bg-slate-900/50 border border-white/10 p-5 rounded-2xl text-xl font-mono focus:border-sky-500 focus:outline-none transition-all group-hover:border-white/20" 
+                                                   placeholder="0123456789" onChange={e => setSendForm({...sendForm, account_number: e.target.value})} />
+                                        </div>
+                                        <div className="group">
+                                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-widest ml-1 mb-2 block">Legal Beneficiary Name</label>
+                                            <input className="w-full bg-slate-900/50 border border-white/10 p-5 rounded-2xl text-lg focus:border-sky-500 focus:outline-none transition-all" 
+                                                   placeholder="Joesph Ayodele" onChange={e => setSendForm({...sendForm, account_name: e.target.value})} />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="group">
+                                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-widest ml-1 mb-2 block">NIP Code (Bank)</label>
+                                            <input className="w-full bg-slate-900/50 border border-white/10 p-5 rounded-2xl text-xl font-mono focus:border-sky-500 focus:outline-none transition-all" 
+                                                   value={sendForm.nip_code} placeholder="000013" onChange={e => setSendForm({...sendForm, nip_code: e.target.value})} />
+                                        </div>
+                                        <div className="group">
+                                            <label className="text-[10px] text-slate-500 font-black uppercase tracking-widest ml-1 mb-2 block">Amount (NGN)</label>
+                                            <input className="w-full bg-slate-900/50 border border-white/10 p-5 rounded-2xl text-2xl font-black text-sky-400 focus:border-sky-500 focus:outline-none transition-all" 
+                                                   placeholder="0.00" onChange={e => setSendForm({...sendForm, amount: e.target.value})} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onClick={handleSendMoney} disabled={loading} className="w-full btn-gradient py-6 rounded-2xl text-lg font-black uppercase tracking-[0.25em] flex items-center justify-center gap-4 group">
+                                    <i data-lucide="zap" className="w-6 h-6 group-hover:animate-bounce"></i>
+                                    {loading ? "Analyzing Fraud Risk..." : "Authorize Transaction"}
+                                </button>
+                            </div>
+
+                            {/* ANALYTICS & METRICS */}
+                            {metrics && (
+                                <div className="grid grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                    <div className="glass p-6 rounded-3xl border-emerald-500/20 flex items-center justify-between">
+                                        <div>
+                                            <div className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Risk Score</div>
+                                            <div className="text-3xl font-black text-emerald-400">{metrics.risk_score}</div>
+                                        </div>
+                                        <i data-lucide="activity" className="w-8 h-8 text-emerald-500/20"></i>
+                                    </div>
+                                    <div className="glass p-6 rounded-3xl border-sky-500/20 flex items-center justify-between">
+                                        <div>
+                                            <div className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Scan Latency</div>
+                                            <div className="text-3xl font-black text-sky-400">{metrics.scan_time_ms}<span className="text-sm ml-1">ms</span></div>
+                                        </div>
+                                        <i data-lucide="timer" className="w-8 h-8 text-sky-500/20"></i>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
