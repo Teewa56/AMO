@@ -1,0 +1,21 @@
+# AMO SecurePay API — Python dependencies
+# Install with: python -m pip install -r requirements.txt
+#
+# Note: Tested on Python 3.11–3.14.
+# If using Python 3.14, some packages may require --only-binary :all:
+# since Rust-based extensions may not yet have pre-built wheels.
+
+# Web framework
+fastapi>=0.115.5
+uvicorn[standard]>=0.32.1
+
+# HTTP client (Squad gateway)
+httpx>=0.27.2
+
+# Settings / env
+python-dotenv>=1.0.1
+pydantic-settings>=2.6.1
+pydantic>=2.9.2
+
+# ORM + DB
+sqlalchemy>=2.0.36

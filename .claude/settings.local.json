@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Lenovo\\\\Desktop\\\\Main\\\\Programming\\\\Professional_Projects\\\\portfolio\\\\MY STARTUPS\\\\AMO\\\\backend\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(python -c \"import os; dirs = ['app', 'app/core', 'app/schemas', 'app/services', 'app/api', 'app/api/routers']; [open\\(f'{d}/__init__.py', 'w'\\).close\\(\\) for d in dirs if not os.path.exists\\(f'{d}/__init__.py'\\)]; print\\('Done'\\)\")",
+      "Bash(python -m py_compile app/core/config.py app/core/database.py app/schemas/models.py app/schemas/transactions.py app/services/fraud_engine.py app/services/squad_client.py app/api/routers/transfers.py app/main.py)",
+      "Bash(pip install *)",
+      "PowerShell(python --version)",
+      "PowerShell(python -m pip --version)",
+      "PowerShell(python -m pip install pydantic-settings==2.6.1 pydantic==2.9.2 fastapi==0.115.5 uvicorn sqlalchemy==2.0.36 httpx==0.27.2 python-dotenv -q 2>&1; Write-Host \"Done: $LASTEXITCODE\")"
+    ]
+  }
+}
