@@ -1,4 +1,4 @@
-# AMO — Installation Guide
+﻿# AMO â€” Installation Guide
 
 Complete step-by-step guide to run AMO locally.
 
@@ -41,7 +41,7 @@ DATABASE_URL=sqlite:///./aom_database.db
 
 > **Get your Squad API key**: Sign up at [squadco.com](https://squadco.com/) and grab your sandbox secret key from the dashboard.
 >
-> **Note**: The app works without a Squad key — it gracefully falls back to mock account numbers for demo purposes.
+> **Note**: The app works without a Squad key â€” it gracefully falls back to mock account numbers for demo purposes.
 
 ---
 
@@ -71,7 +71,7 @@ The backend API will be available at **http://localhost:8000**
 Verify it's running:
 ```bash
 curl http://localhost:8000
-# → {"status":"Online"}
+# â†’ {"status":"Online"}
 ```
 
 View auto-generated API docs:
@@ -101,15 +101,15 @@ The frontend will be available at **http://localhost:5173**
 ## 5. Using the App
 
 1. **Open** http://localhost:5173 in your browser
-2. **Explore** the landing page — click nodes in the orbital timeline, scroll through features
+2. **Explore** the landing page â€” click nodes in the orbital timeline, scroll through features
 3. **Click** "Open Your Account" or "Launch App"
-4. **Enter** your name and email → you'll get a real Wema Bank account number
-5. **Send money** to any Nigerian bank account — watch the AI shield scan in real-time
+4. **Enter** your name and email â†’ you'll get a real GTBank account number
+5. **Send money** to any Nigerian bank account â€” watch the AI shield scan in real-time
 6. **View** your transaction history with fraud risk scores
 
 ### Demo Notes
-- Starting balance: **₦150,000**
-- The AI fraud engine runs in 1.2 seconds — you'll see the scanning animation
+- Starting balance: **â‚¦150,000**
+- The AI fraud engine runs in 1.2 seconds â€” you'll see the scanning animation
 - Try sending a very large amount to trigger a higher risk score
 - All transactions are stored locally in `backend/aom_database.db` (SQLite)
 
@@ -157,7 +157,7 @@ proxy: {
 ```
 
 ### CORS errors
-The backend has CORS fully open (`allow_origins=["*"]`) — if you're seeing CORS errors, the backend is likely not running.
+The backend has CORS fully open (`allow_origins=["*"]`) â€” if you're seeing CORS errors, the backend is likely not running.
 
 ### Squad API errors
 If Squad returns errors, the app automatically falls back to mock account numbers. The demo will still work end-to-end.
@@ -168,47 +168,47 @@ If Squad returns errors, the app automatically falls back to mock account number
 
 ```
 AMO/
-├── .env.example              ← Environment variable template
-├── README.md                 ← Project overview
-├── INSTALLATION.md           ← This file
-│
-├── backend/
-│   ├── requirements.txt      ← Python dependencies
-│   └── app/
-│       ├── main.py           ← FastAPI app + CORS config
-│       ├── core/
-│       │   ├── config.py     ← Settings (reads from .env)
-│       │   └── database.py   ← SQLite + SQLAlchemy setup
-│       ├── api/routers/
-│       │   └── transfers.py  ← All API endpoints
-│       ├── schemas/
-│       │   ├── models.py     ← DB models (WalletDB, TransactionDB)
-│       │   └── transactions.py ← Pydantic request schemas
-│       └── services/
-│           ├── squad_client.py  ← Squad API integration
-│           └── fraud_engine.py  ← AI fraud detection engine
-│
-└── frontend/
-    ├── package.json          ← Node dependencies
-    ├── vite.config.ts        ← Vite + Tailwind + path aliases
-    ├── tsconfig.app.json     ← TypeScript config
-    └── src/
-        ├── App.tsx           ← Router + dark mode setup
-        ├── main.tsx          ← React entry point
-        ├── index.css         ← Tailwind v4 + orange theme
-        ├── api/client.ts     ← Type-safe API client
-        ├── hooks/
-        │   └── useWallet.ts  ← Wallet state management
-        ├── lib/utils.ts      ← cn(), formatNaira(), etc.
-        ├── pages/
-        │   ├── Landing.tsx   ← Full landing page
-        │   ├── Onboarding.tsx ← Account creation flow
-        │   ├── Dashboard.tsx ← Main banking dashboard
-        │   ├── SendMoney.tsx ← Transfer form + AI scan
-        │   └── History.tsx   ← Transaction history
-        └── components/
-            ├── ui/           ← Badge, Button, Card, Input, etc.
-            └── blocks/       ← Gallery4, Feature108, Features10
+â”œâ”€â”€ .env.example              â† Environment variable template
+â”œâ”€â”€ README.md                 â† Project overview
+â”œâ”€â”€ INSTALLATION.md           â† This file
+â”‚
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ requirements.txt      â† Python dependencies
+â”‚   â””â”€â”€ app/
+â”‚       â”œâ”€â”€ main.py           â† FastAPI app + CORS config
+â”‚       â”œâ”€â”€ core/
+â”‚       â”‚   â”œâ”€â”€ config.py     â† Settings (reads from .env)
+â”‚       â”‚   â””â”€â”€ database.py   â† SQLite + SQLAlchemy setup
+â”‚       â”œâ”€â”€ api/routers/
+â”‚       â”‚   â””â”€â”€ transfers.py  â† All API endpoints
+â”‚       â”œâ”€â”€ schemas/
+â”‚       â”‚   â”œâ”€â”€ models.py     â† DB models (WalletDB, TransactionDB)
+â”‚       â”‚   â””â”€â”€ transactions.py â† Pydantic request schemas
+â”‚       â””â”€â”€ services/
+â”‚           â”œâ”€â”€ squad_client.py  â† Squad API integration
+â”‚           â””â”€â”€ fraud_engine.py  â† AI fraud detection engine
+â”‚
+â””â”€â”€ frontend/
+    â”œâ”€â”€ package.json          â† Node dependencies
+    â”œâ”€â”€ vite.config.ts        â† Vite + Tailwind + path aliases
+    â”œâ”€â”€ tsconfig.app.json     â† TypeScript config
+    â””â”€â”€ src/
+        â”œâ”€â”€ App.tsx           â† Router + dark mode setup
+        â”œâ”€â”€ main.tsx          â† React entry point
+        â”œâ”€â”€ index.css         â† Tailwind v4 + orange theme
+        â”œâ”€â”€ api/client.ts     â† Type-safe API client
+        â”œâ”€â”€ hooks/
+        â”‚   â””â”€â”€ useWallet.ts  â† Wallet state management
+        â”œâ”€â”€ lib/utils.ts      â† cn(), formatNaira(), etc.
+        â”œâ”€â”€ pages/
+        â”‚   â”œâ”€â”€ Landing.tsx   â† Full landing page
+        â”‚   â”œâ”€â”€ Onboarding.tsx â† Account creation flow
+        â”‚   â”œâ”€â”€ Dashboard.tsx â† Main banking dashboard
+        â”‚   â”œâ”€â”€ SendMoney.tsx â† Transfer form + AI scan
+        â”‚   â””â”€â”€ History.tsx   â† Transaction history
+        â””â”€â”€ components/
+            â”œâ”€â”€ ui/           â† Badge, Button, Card, Input, etc.
+            â””â”€â”€ blocks/       â† Gallery4, Feature108, Features10
 ```
 
 ---
@@ -217,24 +217,24 @@ AMO/
 
 ### Backend (Python)
 ```
-fastapi          — Web framework
-uvicorn          — ASGI server
-sqlalchemy       — ORM
-pydantic         — Data validation
-httpx            — Async HTTP client (Squad API)
-python-dotenv    — Environment variables
+fastapi          â€” Web framework
+uvicorn          â€” ASGI server
+sqlalchemy       â€” ORM
+pydantic         â€” Data validation
+httpx            â€” Async HTTP client (Squad API)
+python-dotenv    â€” Environment variables
 ```
 
 ### Frontend (Node.js)
 ```
-react + react-dom        — UI framework
-react-router-dom         — Client-side routing
-tailwindcss              — Utility CSS
-lucide-react             — Icon library
-class-variance-authority — Component variants
-@radix-ui/react-slot     — Composable components
-@radix-ui/react-tabs     — Accessible tabs
-embla-carousel-react     — Carousel/slider
-motion                   — Animation library
-clsx + tailwind-merge    — Class utilities
+react + react-dom        â€” UI framework
+react-router-dom         â€” Client-side routing
+tailwindcss              â€” Utility CSS
+lucide-react             â€” Icon library
+class-variance-authority â€” Component variants
+@radix-ui/react-slot     â€” Composable components
+@radix-ui/react-tabs     â€” Accessible tabs
+embla-carousel-react     â€” Carousel/slider
+motion                   â€” Animation library
+clsx + tailwind-merge    â€” Class utilities
 ```

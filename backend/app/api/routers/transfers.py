@@ -83,7 +83,7 @@ async def process_receive(
     db: Session = Depends(get_db),
 ):
     """
-    Provision (or retrieve) a Wema Bank virtual account via Squad.
+    Provision (or retrieve) a GTBank virtual account via Squad.
 
     Idempotent — calling it twice with the same email returns the
     existing wallet instead of creating a duplicate.
@@ -105,7 +105,7 @@ async def process_receive(
 
     res      = await squad.setup_receiving_account(first_name, last_name, req.email)
     acct_num = res.get("data", {}).get("account_number")
-    bank_name = res.get("data", {}).get("bank_name", "Wema Bank")
+    bank_name = res.get("data", {}).get("bank_name", "GTBank")
 
     if not acct_num:
         log.error("Squad did not return an account_number for %s", req.email)

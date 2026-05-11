@@ -29,6 +29,7 @@ const NIGERIAN_BANKS = [
   { nip: '033', name: 'United Bank for Africa' },
   { nip: '215', name: 'Unity Bank' },
   { nip: '035', name: 'Wema Bank' },
+  { nip: '737', name: 'GTBank (737)' },
   { nip: '057', name: 'Zenith Bank' },
   { nip: '999992', name: 'OPay' },
   { nip: '999991', name: 'Palmpay' },
@@ -135,7 +136,7 @@ export default function SendMoney({ wallet, onBalanceUpdate, darkMode, toggleDar
             <ArrowLeft className="w-4 h-4" /> Back to Dashboard
           </Button>
           <h1 className="text-3xl font-bold">Send Money</h1>
-          <p className="text-muted-foreground mt-1">Transfer to any Nigerian bank account — AI-guarded, squad-powered.</p>
+          <p className="text-muted-foreground mt-1">Transfer to any Nigerian bank account — AI-screened, Squad-powered.</p>
         </div>
 
         {/* Balance pill */}

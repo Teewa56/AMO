@@ -1,6 +1,6 @@
-# AMO — Autonomous Money Operations
+﻿# AMO â€” Autonomous Money Operations
 
-> **AI-Native Nigerian Payment Infrastructure · Built for SQUADCO 3.0 Hackathon**
+> **AI-Native Nigerian Payment Infrastructure Â· Built for SQUADCO 3.0 Hackathon**
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
@@ -12,9 +12,9 @@
 
 ## What is AMO?
 
-AMO is a **full-stack Nigerian fintech platform** that reimagines how money moves. Every transaction passes through a real-time **AI Fraud Shield** before processing — blocking suspicious activity in 1.2 seconds, not after the fact.
+AMO is a **full-stack Nigerian fintech platform** that reimagines how money moves. Every transaction passes through a real-time **AI Fraud Shield** before processing â€” blocking suspicious activity in 1.2 seconds, not after the fact.
 
-Built on Squad's production-grade payment infrastructure, AMO provisions real **Wema Bank virtual accounts**, executes NIP-compliant bank transfers, and maintains a full audit trail with per-transaction risk scores.
+Built on Squad's production-grade payment infrastructure, AMO provisions real **GTBank virtual accounts**, executes NIP-compliant bank transfers, and maintains a full audit trail with per-transaction risk scores.
 
 **This is not a mockup. This is production-grade fintech.**
 
@@ -24,44 +24,44 @@ Built on Squad's production-grade payment infrastructure, AMO provisions real **
 
 ```
 AMO/
-├── backend/
-│   └── app/
-│       ├── api/routers/transfers.py     ← All payment endpoints
-│       ├── services/squad_client.py     ← Squad API integration
-│       ├── services/fraud_engine.py     ← AI risk scoring (7 modules)
-│       ├── schemas/models.py            ← SQLAlchemy ORM (Wallet, Transaction)
-│       └── core/                        ← Config + DB setup
-│
-└── frontend/
-    └── src/
-        ├── pages/                       ← Landing, Dashboard, Send, History
-        ├── components/ui/               ← shadcn-style component library
-        ├── components/blocks/           ← Feature sections (Gallery, Tabs, etc.)
-        ├── api/client.ts                ← Type-safe API client
-        └── hooks/useWallet.ts           ← Wallet state (localStorage)
+â”œâ”€â”€ backend/
+â”‚   â””â”€â”€ app/
+â”‚       â”œâ”€â”€ api/routers/transfers.py     â† All payment endpoints
+â”‚       â”œâ”€â”€ services/squad_client.py     â† Squad API integration
+â”‚       â”œâ”€â”€ services/fraud_engine.py     â† AI risk scoring (7 modules)
+â”‚       â”œâ”€â”€ schemas/models.py            â† SQLAlchemy ORM (Wallet, Transaction)
+â”‚       â””â”€â”€ core/                        â† Config + DB setup
+â”‚
+â””â”€â”€ frontend/
+    â””â”€â”€ src/
+        â”œâ”€â”€ pages/                       â† Landing, Dashboard, Send, History
+        â”œâ”€â”€ components/ui/               â† shadcn-style component library
+        â”œâ”€â”€ components/blocks/           â† Feature sections (Gallery, Tabs, etc.)
+        â”œâ”€â”€ api/client.ts                â† Type-safe API client
+        â””â”€â”€ hooks/useWallet.ts           â† Wallet state (localStorage)
 ```
 
 ---
 
 ## Core Features
 
-### 🛡️ AI Fraud Shield
+### ðŸ›¡ï¸ AI Fraud Shield
 Every transaction triggers a 7-module parallel risk analysis:
-- Velocity checks · Amount anomaly detection · Blacklist scanning
-- Pattern matching · Network analysis · Time-of-day risk · Recipient profiling
+- Velocity checks Â· Amount anomaly detection Â· Blacklist scanning
+- Pattern matching Â· Network analysis Â· Time-of-day risk Â· Recipient profiling
 
-Risk scores ≥ 0.7 → **Hard blocked instantly.** Analysis time: **1.2 seconds.**
+Risk scores â‰¥ 0.7 â†’ **Hard blocked instantly.** Analysis time: **1.2 seconds.**
 
-### ⚡ Instant Transfers
+### âš¡ Instant Transfers
 - Squad NIP-compliant payouts to all 25+ Nigerian banks
-- Settles in **< 3 seconds** · Full Squad reference tracking
+- Settles in **< 3 seconds** Â· Full Squad reference tracking
 - Atomic balance updates with DB rollback on failure
 
-### 🏦 Virtual Accounts
-- Real **Wema Bank** virtual accounts via Squad API · NUBAN-compliant 10-digit numbers
-- Instantly receivable — deposit from any Nigerian bank account
+### ðŸ¦ Virtual Accounts
+- Real **GTBank** virtual accounts via Squad API Â· NUBAN-compliant 10-digit numbers
+- Instantly receivable â€” deposit from any Nigerian bank account
 
-### 📊 Complete Audit Trail
+### ðŸ“Š Complete Audit Trail
 - Last 20 transactions with AI risk scores, fraud decisions, Squad references
 
 ---
@@ -92,7 +92,7 @@ Content-Type: application/json
 {
   "status": "success",
   "account_number": "0123456789",
-  "bank_name": "Wema Bank",
+  "bank_name": "GTBank",
   "starting_balance": 150000.0
 }
 ```
@@ -158,26 +158,26 @@ uvicorn app.main:app --reload --port 8000
 
 # Frontend (new terminal)
 cd frontend && npm install && npm run dev
-# → http://localhost:5173
+# â†’ http://localhost:5173
 ```
 
 ---
 
 ## Hackathon Notes
 
-**Built for**: SQUADCO 3.0 — "The Future of Nigerian Payments"
+**Built for**: SQUADCO 3.0 â€” "The Future of Nigerian Payments"
 
 **What makes AMO different:**
 
-1. **Real infrastructure** — Squad API integration with actual virtual account provisioning
-2. **Fraud-first design** — AI shield is the core transaction flow, not an afterthought
-3. **Production patterns** — Atomic DB transactions, rollback on failure, comprehensive error handling
-4. **Full-stack completeness** — Landing page, onboarding, dashboard, transfers, history — a complete product
+1. **Real infrastructure** â€” Squad API integration with actual virtual account provisioning
+2. **Fraud-first design** â€” AI shield is the core transaction flow, not an afterthought
+3. **Production patterns** â€” Atomic DB transactions, rollback on failure, comprehensive error handling
+4. **Full-stack completeness** â€” Landing page, onboarding, dashboard, transfers, history â€” a complete product
 
-**Demo**: Use any name + email. No KYC required. ₦150,000 starting balance.
+**Demo**: Use any name + email. No KYC required. â‚¦150,000 starting balance.
 
 ---
 
 ## License
 
-MIT — Built for SQUADCO 3.0 Hackathon 2026.
+MIT â€” Built for SQUADCO 3.0 Hackathon 2026.

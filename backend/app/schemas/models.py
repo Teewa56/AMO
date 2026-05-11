@@ -3,7 +3,7 @@ SQLAlchemy ORM models for the AMO SecurePay database.
 
 Tables
 ------
-wallets       — one row per virtual account (Wema Bank via Squad)
+wallets       — one row per virtual account (GTBank via Squad)
 transactions  — one row per debit sent through the fraud engine + Squad payout
 """
 
@@ -25,7 +25,7 @@ class WalletDB(Base):
     last_name      = Column(String(64),  nullable=False, index=True)
     email          = Column(String(255), unique=True, nullable=False, index=True)
     account_number = Column(String(10),  unique=True, nullable=False, index=True)
-    bank_name      = Column(String(128), nullable=False, default="Wema Bank")
+    bank_name      = Column(String(128), nullable=False, default="GTBank")
     balance        = Column(Float,       nullable=False, default=150_000.0)
     created_at     = Column(DateTime(timezone=True), nullable=False, default=_utcnow)
 

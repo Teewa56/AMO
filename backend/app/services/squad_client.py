@@ -2,7 +2,7 @@
 Squad Co payment gateway client.
 
 Wraps two Squad sandbox endpoints:
-  POST /virtual-account  — provision a Wema Bank virtual account
+  POST /virtual-account  — provision a GTBank virtual account
   POST /payout/transfer  — execute a NIP bank transfer
 
 All methods gracefully degrade to mock responses when the sandbox is
@@ -37,7 +37,7 @@ def _mock_account(email: str) -> dict:
         "status": "success",
         "data": {
             "account_number": account_number,
-            "bank_name":      "Wema Bank",
+            "bank_name":      "GTBank",
         },
     }
 
@@ -81,7 +81,7 @@ class SquadClient:
         email: str,
     ) -> dict[str, Any]:
         """
-        Call Squad's /virtual-account endpoint to provision a Wema Bank
+        Call Squad's /virtual-account endpoint to provision a GTBank
         virtual account for the user.
 
         Falls back to a mock account when:
