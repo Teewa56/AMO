@@ -12,7 +12,7 @@ class WalletDB(Base):
     email = Column(String, unique=True, index=True)
     account_number = Column(String, unique=True, index=True)
     bank_name = Column(String, default="Wema Bank")
-    balance = Column(Float, default=150000.0)  # Default demo balance
+    balance = Column(Float, default=150000000.0)  # Default demo balance
 
 
 class TransactionDB(Base):
