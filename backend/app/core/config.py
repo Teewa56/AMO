@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     SQUAD_SECRET_KEY: str
     SQUAD_BASE_URL: str = "https://sandbox-api-d.squadco.com"
     AI_ENGINE_URL: str = "http://localhost:8080/api/v1/fraud/analyze"
-    DATABASE_URL: str = "sqlite:///./aom_database.db"
+    DATABASE_URL: str = "sqlite:///./aom_secure.db"
 
     class Config:
         env_file = ".env"
