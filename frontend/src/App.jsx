@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
-const BASE_URL = "http://localhost:8000"; 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const API = (base) => `${base}/api/v1/transactions`;
 const fmt = (n) => Number(n).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -185,6 +185,7 @@ select.ios-input { appearance: none; color: var(--gt-orange); font-weight: 700; 
 .ai-decision-box { margin-top: 30px; padding: 20px; border-radius: 20px; text-align: center; font-weight: 800; font-size: 16px; }
 .ai-decision-box.approved { background: rgba(52, 199, 89, 0.1); color: var(--green); }
 .ai-decision-box.blocked { background: rgba(255, 59, 48, 0.1); color: var(--red); }
+.ai-decision-box.pending { background: rgba(255, 159, 10, 0.12); color: #d97706; }
 
 /* ── TOASTS ── */
 .toast-wrap { position: absolute; bottom: 40px; left: 0; right: 0; z-index: 400; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; }
@@ -279,8 +280,8 @@ function AOMWebApp() {
         const acct = {
           name, email,
           account_number: data.account_number,
-          bank_name: "Squad", 
-          balance: data.balance !== undefined ? data.balance : 150000 
+          bank_name: "Squad",
+          balance: data.starting_balance !== undefined ? data.starting_balance : (data.balance !== undefined ? data.balance : 150000)
         };
         
         setAccount(acct);
@@ -321,7 +322,19 @@ function AOMWebApp() {
 
         if (!res.ok) {
           setAiState("blocked");
-          setTimeout(() => { setAiState("idle"); toast("Blocked by AI Shield"); }, 2500);
+          setTimeout(() => { setAiState("idle"); toast(data.detail || "Blocked by AI Shield"); }, 2500);
+          return;
+        }
+
+        if (data.status === "pending") {
+          setAiState("pending");
+          setTimeout(() => { setAiState("idle"); toast(data.message || "Transaction on hold pending review"); }, 2500);
+          return;
+        }
+
+        if (data.status !== "success") {
+          setAiState("blocked");
+          setTimeout(() => { setAiState("idle"); toast(data.message || "Transaction could not be completed"); }, 2500);
           return;
         }
 
@@ -591,14 +604,14 @@ function AOMWebApp() {
             </div>
             <div className="ai-status-row">
               <span className="ai-status-label">Beneficiary Graph</span>
-              <span className={`ai-status-val ${aiState === 'scanning' ? 'pending' : (aiState === 'blocked' ? 'risk' : 'safe')}`}>
-                {aiState === 'scanning' ? 'ANALYZING...' : (aiState === 'blocked' ? 'HIGH RISK' : 'CLEAN')}
+              <span className={`ai-status-val ${aiState === 'scanning' ? 'pending' : (aiState === 'blocked' ? 'risk' : (aiState === 'pending' ? 'pending' : 'safe'))}`}>
+                {aiState === 'scanning' ? 'ANALYZING...' : (aiState === 'blocked' ? 'HIGH RISK' : (aiState === 'pending' ? 'PENDING REVIEW' : 'CLEAN'))}
               </span>
             </div>
             <div className="ai-status-row">
               <span className="ai-status-label">Integrity Verification</span>
-              <span className={`ai-status-val ${aiState === 'scanning' ? 'pending' : 'safe'}`}>
-                {aiState === 'scanning' ? 'ANALYZING...' : 'VERIFIED'}
+              <span className={`ai-status-val ${aiState === 'scanning' ? 'pending' : (aiState === 'pending' ? 'pending' : 'safe')}`}>
+                {aiState === 'scanning' ? 'ANALYZING...' : (aiState === 'pending' ? 'PENDING' : 'VERIFIED')}
               </span>
             </div>
 
@@ -609,6 +622,7 @@ function AOMWebApp() {
             )}
             {aiState === 'approved' && <div className="ai-decision-box approved">TRANSACTION CLEARED</div>}
             {aiState === 'blocked' && <div className="ai-decision-box blocked">TRANSACTION BLOCKED</div>}
+            {aiState === 'pending' && <div className="ai-decision-box pending">TRANSACTION PENDING REVIEW</div>}
           </div>
         </div>
       )}
